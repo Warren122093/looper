@@ -1,4 +1,5 @@
 import time
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from colorama import init, Fore, Style
@@ -6,21 +7,19 @@ from colorama import init, Fore, Style
 # Initialize colorama
 init(autoreset=True)
 
-def get_user_input():
-    url = input(f"{Fore.YELLOW}Enter the video URL to loop: {Style.RESET_ALL}")
-    while True:
-        try:
-            loops = int(input(f"{Fore.YELLOW}How many times do you want to loop the video? {Style.RESET_ALL}"))
-            if loops > 0:
-                break
-            else:
-                print(f"{Fore.RED}Please enter a number greater than 0.{Style.RESET_ALL}")
-        except ValueError:
-            print(f"{Fore.RED}Invalid input. Please enter an integer.{Style.RESET_ALL}")
-    return url, loops
-
 def main():
-    url, loops = get_user_input()
+    if len(sys.argv) != 3:
+        print(f"{Fore.RED}Usage: python multi.py <video_url> <loops>{Style.RESET_ALL}")
+        sys.exit(1)
+    url = sys.argv[1]
+    try:
+        loops = int(sys.argv[2])
+        if loops <= 0:
+            raise ValueError
+    except ValueError:
+        print(f"{Fore.RED}Please provide a valid number of loops (> 0).{Style.RESET_ALL}")
+        sys.exit(1)
+
     print(f"{Fore.CYAN}Starting headless video looper for: {url}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}Total loops (refreshes): {loops}{Style.RESET_ALL}\n")
 
@@ -30,6 +29,8 @@ def main():
     chrome_options.add_argument("--log-level=3")
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--mute-audio")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
 
     driver = webdriver.Chrome(options=chrome_options)
     try:
@@ -44,6 +45,7 @@ def main():
         print(f"{Fore.GREEN}All loops (refreshes) finished!{Style.RESET_ALL}")
     except Exception as e:
         print(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
+        sys.exit(1)
     finally:
         driver.quit()
 
