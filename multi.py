@@ -62,8 +62,8 @@ def main():
         print(f"{Fore.GREEN}Opening the video link...{Style.RESET_ALL}")
         driver.get(url)
         for i in range(1, loops + 1):
-            print(f"{Fore.BLUE}[{i}/{loops}] Viewing for 4 seconds...{Style.RESET_ALL}")
-            time.sleep(4)
+            print(f"{Fore.BLUE}[{i}/{loops}] Viewing for 10 seconds...{Style.RESET_ALL}")
+            time.sleep(10)
             if i < loops:
                 print(f"{Fore.MAGENTA}Refreshing the page...{Style.RESET_ALL}")
                 driver.refresh()
