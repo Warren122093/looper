@@ -1,4 +1,5 @@
 import time
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from colorama import init, Fore, Style
@@ -35,7 +36,17 @@ def get_user_input():
 
 def main():
     print_banner()
-    url, loops = get_user_input()
+    # Accept command-line arguments for URL and loops (workflow), else ask interactively
+    if len(sys.argv) == 3:
+        url = sys.argv[1]
+        try:
+            loops = int(sys.argv[2])
+        except ValueError:
+            print(f"{Fore.RED}Invalid number of loops. Must be an integer.{Style.RESET_ALL}")
+            sys.exit(1)
+    else:
+        url, loops = get_user_input()
+
     print(f"{Fore.CYAN}Starting headless video looper for: {url}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}Total loops (refreshes): {loops}{Style.RESET_ALL}\n")
 
